@@ -1,0 +1,50 @@
+Copyright(C) 2005 Nexstim, Ltd.
+Nexstim eXimia EEG Session file, Version 1.1.0
+
+MODIFICATION OF THIS FILE IS STRICTLY PROHIBITED.
+It may cause a reading error when browsing the session with Nexstim's software.
+Nexstim doesn't take responsibility about errors resulting from modifications.
+
+----------------------------------------------------------------------------------
+
+SESSION:
+
+Creation time:                               24.6.2014 14:28:35
+
+Subject name:                                Tuomas Mutanen
+Subject gender:                              Male
+Subject age:                                 26
+Subject handedness:                          Right
+Researcher name:                             Matleena Kukkonen
+
+----------------------------------------------------------------------------------
+
+EXAM:
+
+Creation time:                               24.6.2014 14:44:58
+Description: 
+
+nothing
+
+RAW DATA:
+
+Data file:                                   20140624_Tuomas2_1.nxe
+
+
+----------------------------------------------------------------------------------
+
+
+EXAM:
+
+Creation time:                               24.6.2014 14:47:04
+Description: 
+
+TES + TMS in EOG
+
+RAW DATA:
+
+Data file:                                   20140624_Tuomas2_2.nxe
+
+
+----------------------------------------------------------------------------------
+

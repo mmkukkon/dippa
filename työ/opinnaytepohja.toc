@@ -1,0 +1,19 @@
+\contentsline {section}{Abstract{} (in Finnish)}{ii}{section*.1}
+\contentsline {section}{Abstract{}}{iii}{section*.2}
+\contentsline {section}{Preface}{iv}{section*.3}
+\contentsline {section}{Contents}{v}{section*.4}
+\contentsline {section}{Symbols and abbreviations}{vi}{section*.6}
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {section}{\numberline {2}Background}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}TMS and TES affecting the brain}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Previous studies}{2}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}}{2}{subsection.2.3}
+\contentsline {section}{\numberline {3}Methods}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Data}{3}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Experimental paradigm}{3}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Data analysis}{3}{subsection.3.3}
+\contentsline {section}{\numberline {4}Results}{4}{section.4}
+\contentsline {section}{\numberline {5}Discussion}{5}{section.5}
+\contentsline {section}{References}{6}{section*.10}
+\contentsline {section}{\numberline {A}Appendix example }{8}{appendix.A}
+\contentsline {section}{\numberline {B}Another appendix }{9}{appendix.B}

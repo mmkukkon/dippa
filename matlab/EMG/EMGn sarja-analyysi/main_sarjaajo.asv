@@ -1,0 +1,8 @@
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','ttb_nom_EXP_1.TXT','ttb_nom_EXP_12.TXT','nomasking_APB')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','ttb_nom_EXP_1.TXT','jrb_noma_EXP_3.TXT','nomasking_ADM')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','jrb_1_EXP_1.TXT','jrb_1_EXP_2.TXT','1_APB')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','jrb_1_EXP_1.TXT','jrb_1_EXP_3.TXT','1_ADM')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','jrb_2_EXP_1.TXT','jrb_2_EXP_2.TXT','2_APB')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','jrb_2_EXP_1.TXT','jrb_2_EXP_3.TXT','2_ADM')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','jrb_3_EXP_1.TXT','jrb_3_EXP_2.TXT','3_APB')
+aja_emg_sarjassa('E:\MEP sorting\MEP03b\','jrb_3_EXP_1.TXT','jrb_3_EXP_3.TXT','3_ADM')

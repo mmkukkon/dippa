@@ -1,0 +1,58 @@
+function [amplitudes,latencies] = emgReadAmplitudes(emgTrials,timeAxis,timeRange,output_dir);
+
+nTrials = size(emgTrials,1);
+amplitudes = zeros(1,nTrials);
+latencies = zeros(1,nTrials);
+
+scrsz = get(0,'ScreenSize');
+fig = figure('Position',[1 scrsz(4) scrsz(3) scrsz(4)]);
+
+i = 1;
+redefine = 1;
+while redefine
+    while i<=nTrials
+        plot(timeAxis,emgTrials(i,:))
+        xlim(timeRange);
+        title(['EMG response nr ',num2str(i),': Select the EMG response minimum and maximum {\bf AMPLITUDE} in any order using cursor, press SPACE to correct previous'])
+        xlabel('Time (ms)')
+        ylabel('Voltage (\mu V)')
+        [lat,ampl,button] = ginput(2);
+        
+        datacursormode on;
+        dcm_obj = datacursormode(fig);
+    
+        
+        if button(1)==1&&button(2)==1
+            info_struct = getCursorInfo(dcm_obj);
+%             lowerLat = info_struct.Position;
+            info_struct_cell = struct2cell(info_struct);
+            lowerLat=cell2mat(info_struct_cell(2));
+            lower = lowerLat(2);
+            latencies(i) = lowerLat(1);
+        else
+            i=i-1;
+            continue
+        end
+    
+        %Reading the maximum amplitude of EMG response: 
+        button = waitforbuttonpress;
+        if button == 0
+            info_struct = getCursorInfo(dcm_obj);
+%             upperLat = info_struct.Position;
+            info_struct_cell = struct2cell(info_struct);
+            upperLat=cell2mat(info_struct_cell(2));
+            upper = upperLat(2);
+        else
+            continue
+        end
+    
+        amplitudes(i)=abs(lower-upper);
+%         save([output_dir,'amplitudeVect3.m'],'amplitudes');
+        i=i+1;
+    end
+    dlgButton = questdlg('Accept the amplitudes or redefine the last one','Continue?','Accept','Redefine','Accept');
+    redefine = strcmp('Redefine',dlgButton);
+    i=i-1;
+end
+
+display('Amplitudes and latencies read :)')

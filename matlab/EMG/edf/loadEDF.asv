@@ -1,0 +1,4 @@
+addpath('P:\tms\hannaanalysis\EMG\edf\biosig4octmat\biosig\t200_FileAccess\')
+
+file = 'P:\tms\hannadata\data\artefact_EEG_data\artifact_kulma_1\julio\emg\julio_anglem20_tiltm20.edf';
+

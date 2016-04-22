@@ -1,0 +1,4 @@
+aja_emg_sarjassa('E:\Topographical mapping\TM05\','s0_EXP_1.TXT','s0_EXP_1.TXT','0_ADM')
+aja_emg_sarjassa('E:\Topographical mapping\TM02b\','f0_EXP_1.TXT','f0_EXP_2.TXT','0_APB')
+aja_emg_sarjassa('E:\Topographical mapping\TM02b\','f0_EXP_1.TXT','f0_EXP_3.TXT','0_ADM')
+aja_emg_sarjassa('E:\Topographical mapping\TM03b\','?.TXT','f0_EXP_2.TXT','0_APB')

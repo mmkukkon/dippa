@@ -1,0 +1,57 @@
+\begin{thebibliography}{1}
+
+\bibitem{antal13}
+Andrea Antal and Walter Paulus.
+\newblock Transcranial alternating current stimulation (tacs).
+\newblock {\em Frontiers in human neuroscience}, 7, 2013.
+
+\bibitem{dilazzaro04}
+V~Di~Lazzaro, A~Oliviero, F~Pilato, E~Saturno, M~Dileone, P~Mazzone, A~Insola,
+  PA~Tonali, and JC~Rothwell.
+\newblock The physiological basis of transcranial motor cortex stimulation in
+  conscious humans.
+\newblock {\em Clinical Neurophysiology}, 115(2):255--266, 2004.
+
+\bibitem{herrmann13}
+Christoph~S Herrmann, Stefan Rach, Toralf Neuling, and Daniel Str{\"u}ber.
+\newblock Transcranial alternating current stimulation: a review of the
+  underlying mechanisms and modulation of cognitive processes.
+\newblock {\em Frontiers in human neuroscience}, 7, 2013.
+
+\bibitem{ilmoniemi99}
+Risto~J Ilmoniemi, Jarmo Ruohonen, and Jari Karhu.
+\newblock Transcranial magnetic stimulation-a new tool for functional imaging
+  of the brain.
+\newblock {\em Critical reviews in biomedical engineering}, 27(3-5):241--284,
+  1999.
+
+\bibitem{miranda06}
+Pedro~Cavaleiro Miranda, Mikhail Lomarev, and Mark Hallett.
+\newblock Modeling the current distribution during transcranial direct current
+  stimulation.
+\newblock {\em Clinical Neurophysiology}, 117(7):1623--1629, 2006.
+
+\bibitem{nitsche00}
+MA~Nitsche and W~Paulus.
+\newblock Excitability changes induced in the human motor cortex by weak
+  transcranial direct current stimulation.
+\newblock {\em The Journal of physiology}, 527(3):633--639, 2000.
+
+\bibitem{nitsche08}
+Michael~A Nitsche, Leonardo~G Cohen, Eric~M Wassermann, Alberto Priori, Nicolas
+  Lang, Andrea Antal, Walter Paulus, Friedhelm Hummel, Paulo~S Boggio, Felipe
+  Fregni, et~al.
+\newblock Transcranial direct current stimulation: state of the art 2008.
+\newblock {\em Brain stimulation}, 1(3):206--223, 2008.
+
+\bibitem{stagg11}
+Charlotte~J Stagg and Michael~A Nitsche.
+\newblock Physiological basis of transcranial direct current stimulation.
+\newblock {\em The Neuroscientist}, 17(1):37--53, 2011.
+
+\bibitem{wagner07}
+Timothy Wagner, Antoni Valero-Cabre, and Alvaro Pascual-Leone.
+\newblock Noninvasive human brain stimulation.
+\newblock {\em Annu. Rev. Biomed. Eng.}, 9:527--565, 2007.
+
+\end{thebibliography}

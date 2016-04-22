@@ -1,0 +1,51 @@
+dir = 'E:\uus emg-laite testidatoja\';
+input_dir = [dir,'EMG\'];
+output_dir = [dir,'EMG_kasitelty\'];
+
+emgfile = 'testimittaus2.mat';
+output_number = 'testi';
+
+load([input_dir,emgfile]);
+celldata = struct2cell(datablock1);
+emgdata = cell2mat(celldata(2));
+firstsampletime = cell2mat(celldata(1));
+
+baseline = 0.2; %sec = 200 msec
+triallength = 0.5;  %sec = 500 msec
+timeAxis = -baseline:1/sampfreq:triallength;
+save([output_dir,'timeAxis.mat'],'timeAxis');
+
+triggers = (markers - firstsampletime) * sampfreq +1;
+for muscle=1:channels
+    emgtrials = [];
+    disp(sources(1,:))
+    for i=1:length(markers)
+        emgtrials = [emgtrials emgdata((triggers(i)-(sampfreq*0.2)):(triggers(i)+(sampfreq*triallength)),muscle)];
+    end
+    emgtrials = emgtrials';
+    save([output_dir,'emgtrials_',output_number,'_',sources(muscle,:),'.mat'],'emgtrials');
+
+    boksi = msgbox('Select the accepted (mouse) / rejected (keyboard) trials!','Message!');
+    uiwait(boksi);
+
+    %Select the accepted/rejected trials:
+    emgAccepted = ones(1,size(emgtrials,1));
+    figure
+    for i=1:size(emgtrials,1)
+        plot(timeAxis,emgtrials(i,:))
+        title('Select accepted(mouse) / rejected(keyboard) trials')
+        xlabel('Time (ms)')
+        ylabel('Voltage (\mu V)')
+%         xlim([max(timeAxis(1),latency_TMS-100) latency_TMS+100]);
+        button = waitforbuttonpress;
+        if button==0,  
+            disp(['Trial ' int2str(i) ', Accepted']);
+        else
+            emgAccepted(i) = 0;
+            disp(['Trial ' int2str(i) ', Rejected']);
+        end
+    end
+    save([output_dir,'acceptedEmg_',output_number,'_',sources(muscle,:),'.mat'],'emgAccepted');
+    % load([output_dir,'acceptedEmg_',output_number,'_',sources(muscle,:),'.mat']);
+    nAcceptedEmgTrials = sum(emgAccepted)
+end

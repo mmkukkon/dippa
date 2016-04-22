@@ -1,0 +1,194 @@
+%Check if there is/is not an EMG response
+
+clear;
+close all;
+
+%----------------------------------
+% Remember to define the... 
+% * Experiment directory
+% * Files containing EMG and trigger data
+%
+% And save/load...
+% * Matrix containing selected trials
+%
+% You can also save...
+% * MEP amplitudes/latencies
+% * Silent period start/stop times
+% * Trigger positions (all triggers, emgSelectTrials.m)
+% * Logfile containing amplitude, latency and silent period
+%   information
+%
+% Sometimes you need to check...
+% * Trigger gradient threshold (emgGetTriggers.m), if not all triggers are
+%   detected/ some are detected several times
+%----------------------------------
+
+%-----Triggering from TMS device---
+% Triggers for paired-pulses: TMS trig out -channels give the EMG device
+% only one trigger pulse corresponding to the conditioning (first) pulse. 
+% In case of paired-pulses, subtract the ISI from the time axis. 
+%----------------------------------
+
+%Files and directories:
+dir = 'E:\Auditory masking\AM02\';  %Experiment directory
+input_dir = [dir,'EMG\'];       %Experiment directory containing raw input EMG files
+output_dir = [dir,'EMG_kasitelty\'];    %Output directory
+% trigfile = [input_dir,'AL0n_EXP_1.TXT'];     %Input trigger file name
+% emgfile = [input_dir,'AL0n_EXP_4.TXT'];      %Input EMG file name
+output_name = '3_APB';    %output name defining the condition (e.g. control, contraction...)
+% logfile = [output_dir,'log_',output_name,'.txt'];   %logfile for saving results
+
+%--Select accepted trials and save them into a .mat file OR load a .mat file
+%   with the accepted trials
+% [emgTrials,timeAxis] = emgSelectTrials(trigfile,emgfile,output_dir,output_name,[-100 1000],[-100 0]);  %emgTrials (trials x samples)
+% save([output_dir,'emgtrials_',output_name,'.mat'],'emgTrials');
+% save([output_dir,'timeAxis.mat'],'timeAxis');
+load([output_dir,'emgtrials_',output_name,'.mat']);
+load([output_dir,'timeAxis.mat']);
+if length(timeAxis~=size(emgTrials,2))
+    timeAxis = linspace(-100,1000,size(emgTrials,2));
+end
+
+boksi = msgbox('Select the TMS artefact latency in the following plot by clicking with mouse!','Message!');
+uiwait(boksi);
+
+%Find the time of the TMS pulse:
+fig = figure;
+plot(timeAxis,emgTrials(1,:))
+title('Select the TMS artefact latency!')
+xlabel('Time (ms)')
+ylabel('Voltage (\mu V)')
+datacursormode on;
+dcm_obj = datacursormode(fig);
+button = waitforbuttonpress;
+info_struct = getCursorInfo(dcm_obj);
+info_struct_cell = struct2cell(info_struct);
+info_mat = cell2mat(info_struct_cell(2));
+latency_TMS = info_mat(1);
+
+%Average the accepted trials
+% averageData = mean(emgTrials);
+% save([output_dir,'average_',output_name,'.mat'],'averageData');
+% figure
+% plot(timeAxis,averageData)
+% title('Average EMG response')
+% xlabel('Time (ms)')
+% ylabel('Voltage (\mu v)')
+
+boksi = msgbox('Click the mouse if there is an EMG response / keyboard if there is not!','Message!');
+uiwait(boksi);
+
+%Select the accepted/rejected trials:
+emgResponseOrNot = ones(1,size(emgTrials,1));
+figure
+for i=1:size(emgTrials,1)
+    plot(timeAxis,emgTrials(i,:))
+    title('Select accepted(mouse) / rejected(keyboard) trials')
+    xlabel('Time (ms)')
+    ylabel('Voltage (\mu V)')
+    xlim([max(timeAxis(1),latency_TMS+15) latency_TMS+45]);
+    button = waitforbuttonpress;
+    if button==0,  
+        disp(['Trial ' int2str(i) ', response']);
+    else
+        emgResponseOrNot(i) = 0;
+        disp(['Trial ' int2str(i) ', NO response']);
+    end
+end
+save([output_dir,'emgResponseOrNot_',output_name,'.mat'],'emgResponseOrNot');
+% load([output_dir,'emgResponseOrNot_',output_name,'.mat']);
+nAcceptedEmgTrials = sum(emgResponseOrNot)
+
+load([output_dir,'acceptedEmg_',output_name,'.mat']);
+load([output_dir,'amplitudes_',output_name,'.mat']);
+
+%Plots the amplitudes:
+figure
+for i=1:size(emgTrials,1)
+    if ~emgResponseOrNot(i)
+        plot(i,amplitudes(i),'co')
+        hold on
+    elseif emgAccepted(i)
+        plot(i,amplitudes(i),'bo')
+        hold on 
+    else
+        plot(i,amplitudes(i),'ro')
+        hold on
+    end
+end
+xlabel('Trial #','FontSize',14,'Position',[80 -33 1])
+ylabel('Amplitude (\mu V)','FontSize',14,'Position',[-15 250 1])
+tick2text(gca);
+hx = getappdata(gca, 'XTickText');
+hy = getappdata(gca, 'YTickText');
+set(hx,'FontSize',14)
+set(hy,'FontSize',14)
+
+[sortedAmplitudes,sortIndex] = sort(amplitudes);
+sortedAcceptedEmg = emgAccepted(sortIndex);
+sortedResponseOrNot = emgResponseOrNot(sortIndex);
+figure
+for i=1:size(emgTrials,1)
+    if ~sortedResponseOrNot(i)
+        plot(i,sortedAmplitudes(i),'co')
+        hold on
+    elseif sortedAcceptedEmg(i)
+        plot(i,sortedAmplitudes(i),'bo')
+        hold on
+    else
+        plot(i,sortedAmplitudes(i),'ro')
+        hold on
+    end
+end
+xlabel('Sorted trial #','FontSize',14,'Position',[80 -33 1])
+ylabel('Amplitude (\mu V)','FontSize',14,'Position',[-15 250 1])
+tick2text(gca);
+hx = getappdata(gca, 'XTickText');
+hy = getappdata(gca, 'YTickText');
+set(hx,'FontSize',14)
+set(hy,'FontSize',14)
+plot([0 length(amplitudes)],[50 50],'g')
+
+
+% figure
+% plot(latencies,'o')
+% title('Latencies')
+% xlabel('Trial #')
+% ylabel('Latency (ms)')
+
+% meanAmpl = mean(amplitudes)
+% stdAmpl = std(amplitudes)
+% meanLat = mean(latencies)
+% stdLat = std(latencies)
+
+% %Read EMG silent period start and stop time using mouse
+% [spStart,spStop] = emgReadSilentPeriod(emgTrials,timeAxis,[-10,200]);
+% save([output_dir,'sp_start_',output_name,'.mat'],'spStart');
+% %load([output_dir,'sp_start_',output_name,'.mat']);
+% save([output_dir,'sp_stop_',output_name,'.mat'],'spStop');
+% %load([output_dir,'sp_stop_',output_name,'.mat']);
+% 
+% spLength = abs(spStop-spStart);
+% 
+% meanSpStart = mean(spStart)
+% stdSpStart = std(spStart)
+% meanSpStop = mean(spStop)
+% stdSpStop = std(spStop)
+% meanSpLength = mean(spLength)
+% stdSpLength = std(spLength)
+
+% %Logfile entries:
+% today = date;
+% c = clock;
+% 
+% fid_log = fopen(logfile, 'wt');
+% fprintf(fid_log, date);
+% fprintf(fid_log, '\n');
+% fprintf(fid_log, 'Analyzed: Year Month Day Hour Minutes Seconds: ');
+% fprintf(fid_log, '%g ', clock);
+% fprintf(fid_log, '\n');
+% fprintf(fid_log, '\n %s', emgfile);
+% % fprintf(fid_log, '\n\n Silent period lenth: %g +/- %g ms',meanSpLength,stdSpLength);
+% fprintf(fid_log, '\n MEP amplitude: %g +/- %g \mu V', meanAmpl, stdAmpl);
+% % fprintf(fid_log, '\n MEP latency: %g +/- %g ms', meanLat, stdLat);
+% fclose(fid_log);

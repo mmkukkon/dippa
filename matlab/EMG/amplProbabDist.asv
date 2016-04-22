@@ -1,0 +1,8 @@
+load('E:\MEP sorting\MEP01\EMG_kasitelty\amplitudes_sorted.mat');
+
+nProbabBins = 1000;
+incr = max(amplitudes_sorted)/100;
+x = 0:incr:max(amplitudes_sorted);
+y = histc(amplitudes_sorted,x)/;
+figure
+bar(x,y)
