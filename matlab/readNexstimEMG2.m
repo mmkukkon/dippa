@@ -3,21 +3,21 @@
 clear;
 close all;
 
-addpath('/../Tuomas_ Mutanen_21032014/')
-addpath('/../EMG/')
-addpath('/../EMG/edf/')
-addpath('/../EMG/edf/biosig4octmat/biosig/t200_FileAccess/')
+addpath('/proj/tms_eeg/Matleena/tDCS-project/Tuomas_ Mutanen_21032014/')
+addpath('/archive/tms_eeg/hanna2/analysis/EMG/')
+addpath('/archive/tms_eeg/hanna2/analysis/EMG/edf/')
+addpath('/archive/tms_eeg/hanna2/analysis/EMG/edf/biosig4octmat/biosig/t200_FileAccess/')
 
 %% Read data file and save into vectors:
 
 subject = 'tuomas';
-condition = 'dc';
+condition = 'new';
 
 dir = '/proj/tms_eeg/Matleena/tDCS-project/Tuomas_ Mutanen_21032014/';
-outputdir = '/home/mmkukkon/Desktop/tuloksia/Tuomas5/';
-input_file = [dir,'Tuomas Mutanen_2014_03_21_15_39_11EMG.edf'];
-output_file = [outputdir,'emg_analyzed',condition,'.mat'];
-output_result_file = [outputdir,'emg_',condition,'.mat'];
+outputdir = '/home/mmkukkon/Desktop/tuloksia/Tuomas/';
+input_file = [dir,'Tuomas Mutanen_2014_06_13_18_12_34EMG.edf'];
+output_file = [outputdir,'emg_',condition,'.mat'];
+output_result_file = [outputdir,'emg_analyzed_',condition,'.mat'];
 
 try 
     load(output_file);
@@ -33,22 +33,27 @@ header.Label
 if header.NS == 5 %number of signals
     muscle_ind = 2; %kts. recstruct.label, mik� indeksi vastaa EMG-signaalia
     trig_ind = 3; %kts. recstruct.label, Gate In
-elseif heades.NS == 7
-    fdi = 2
-    apb = 3
-    elec = 4
-    trig_ind = 5
+elseif header.NS == 7
+    fdi = 2;
+    apb = 3;
+    elec = 4;
+    trig_ind = 5;
 else
     disp('Check recstruct.label for EMG and trig data indices!')
     return;
 end
 
+minimi = min(elec)
+maksimi = max(elec)
+
 %Scale data to correspond to the right units:
-data = 10^6*signals(:,muscle_ind); %uV
+data_fdi = 10^6*signals(:,fdi); %uV
+data_apb = 10^6*signals(:,apb); %uV
+data_elec = 10^6*signals(:,elec); %uV
 trig = signals(:,trig_ind); %V
 
 fs = header.SampleRate; %Hz
-timeAll = (1:length(data))/fs;
+timeAll = (1:length(data_fdi))/fs;
 
 % %% Plot all the data:
 % 
@@ -74,11 +79,16 @@ trigInds = find(diff(trig)>trigGradThreshold);
 bl = 100; %ms
 tw = 300; %ms
 emgData = []; %trials x samples
+emgData2 = []
+elecData = []
 % trigData = [];
 for i=1:length(trigInds)
     %Parse and baseline correct trial i:
-    trial = data(trigInds(i)-round(bl/1000*fs):trigInds(i)+round(tw/1000*fs))-mean(data(trigInds(i)-round(bl/1000*fs):trigInds(i)));
+    trial = data_fdi(trigInds(i)-round(bl/1000*fs):trigInds(i)+round(tw/1000*fs))-mean(data_fdi(trigInds(i)-round(bl/1000*fs):trigInds(i)));
     emgData = [emgData; trial'];
+    trial2 = data_apb(trigInds(i)-round(bl/1000*fs):trigInds(i)+round(tw/1000*fs))-mean(data_apb(trigInds(i)-round(bl/1000*fs):trigInds(i)));
+    emgData2 = [emgData2; trial2'];
+    elecData = data_elec(trigInds);
 %     trigData = [trigData; trig(trigInds(i)-round(bl/1000*fs):trigInds(i)+round(tw/1000*fs))'];
 end
 timeAxis = 1000*((0:(1/fs):(1/fs)*(size(emgData,2)-1))-bl/1000);
@@ -134,6 +144,7 @@ ylim([-310 270])
 
 timeRange = [20 38]; %ms; expected time when the MEP appears with respect to stimulus
 amplitudes = emgReadAmplAutomaticallyNew(emgData,timeAxis,emgAccepted,fs,timeRange);
+amplitudes2 = emgReadAmplAutomaticallyNew(emgData2,timeAxis,emgAccepted,fs,timeRange);
 
 accepted_ind = find(emgAccepted);
 rejected_ind = find(~emgAccepted);
@@ -147,31 +158,50 @@ title('MEP amplitudes')
 xlabel('Trial #')
 ylabel('Amplitude (uV)')
 
+figure
+plot(accepted_ind,amplitudes2(accepted_ind),'ro');
+hold on
+plot(rejected_ind,amplitudes2(rejected_ind),'ko');
+plot([1 length(amplitudes2)],[50 50],'g')
+title('MEP amplitudes')
+xlabel('Trial #')
+ylabel('Amplitude (uV)')
+
+
 % mean_MEP = mean(amplitudes(accepted_ind))
 % std_MEP = std(amplitudes(accepted_ind))
 % n_MEP = length(amplitudes(accepted_ind));
 
-%% Read EMG with different intensities
+%%
+mt_apb = amplitudes2(1:100)
+mt_fdi = amplitudes(1:100)
+mt_e = elecData(1:100)
 
-intensities = [2, -2, 0]
+e_apb = amplitudes2(101:400)
+e_fdi = amplitudes(101:400)
+e_e = elecData(101:400)
 
-if length(intensities) > 1
-[a, b] = sort(intensities)
-intensities = intensities(b)
-amount = 50
-
-%number of meps per intensity
-num_MEP = [length(find(amplitudes(accepted_ind(1:amount))>50)), length(find(amplitudes(accepted_ind(amount+1:amount*2))>50)), length(find(amplitudes(accepted_ind(amount*2+1:amount*3))>50))]
-num_MEP = num_MEP(b)
-
-mean2_MEP = [mean(amplitudes((find(amplitudes(accepted_ind(1:amount))>50)))), mean(amplitudes((find(amplitudes(accepted_ind(amount+1:amount*2))>50)))), mean(amplitudes((find(amplitudes(accepted_ind(amount*2+1:amount*3))>50))))]
-mean2_MEP = mean2_MEP(b)
-
-else
-    num_MEP = length(find(amplitudes(accepted_ind(1:30))>50))
-    mean2_MEP = mean(amplitudes((find(amplitudes(accepted_ind(1:30))>50))))
-end
+% %% Read EMG with different intensities
+% 
+% intensities = [2, -2, 0]
+% 
+% if length(intensities) > 1
+% [a, b] = sort(intensities)
+% intensities = intensities(b)
+% amount = 50
+% 
+% number of meps per intensity
+% num_MEP = [length(find(amplitudes(accepted_ind(1:amount))>50)), length(find(amplitudes(accepted_ind(amount+1:amount*2))>50)), length(find(amplitudes(accepted_ind(amount*2+1:amount*3))>50))]
+% num_MEP = num_MEP(b)
+% 
+% mean2_MEP = [mean(amplitudes((find(amplitudes(accepted_ind(1:amount))>50)))), mean(amplitudes((find(amplitudes(accepted_ind(amount+1:amount*2))>50)))), mean(amplitudes((find(amplitudes(accepted_ind(amount*2+1:amount*3))>50))))]
+% mean2_MEP = mean2_MEP(b)
+% 
+% else
+%     num_MEP = length(find(amplitudes(accepted_ind(1:30))>50))
+%     mean2_MEP = mean(amplitudes((find(amplitudes(accepted_ind(1:30))>50))))
+% end
 
 
 %% Save results
-save(output_result_file, 'amplitudes','emgAccepted','num_MEP', 'mean2_MEP', 'intensities')
+save(output_result_file, 'mt_apb', 'mt_fdi', 'mt_e', 'e_apb', 'e_fdi', 'e_e', 'trigInds')

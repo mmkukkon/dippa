@@ -3,15 +3,15 @@
 clear;
 close all;
 
-addpath('/../Tuomas_ Mutanen_21032014/')
-addpath('/../EMG/')
-addpath('/../EMG/edf/')
-addpath('/../EMG/edf/biosig4octmat/biosig/t200_FileAccess/')
+addpath('/proj/tms_eeg/Matleena/tDCS-project/Tuomas_ Mutanen_21032014/')
+addpath('/archive/tms_eeg/hanna2/analysis/EMG/')
+addpath('/archive/tms_eeg/hanna2/analysis/EMG/edf/')
+addpath('/archive/tms_eeg/hanna2/analysis/EMG/edf/biosig4octmat/biosig/t200_FileAccess/')
 
 %% Read data file and save into vectors:
 
 subject = 'tuomas';
-condition = 'dc';
+condition = 'new';
 
 dir = '/proj/tms_eeg/Matleena/tDCS-project/Tuomas_ Mutanen_21032014/';
 outputdir = '/home/mmkukkon/Desktop/tuloksia/Tuomas5/';
@@ -34,10 +34,10 @@ if header.NS == 5 %number of signals
     muscle_ind = 2; %kts. recstruct.label, mik� indeksi vastaa EMG-signaalia
     trig_ind = 3; %kts. recstruct.label, Gate In
 elseif heades.NS == 7
-    fdi = 2
-    apb = 3
-    elec = 4
-    trig_ind = 5
+    fdi = 2;
+    apb = 3;
+    elec = 4;
+    trig_ind = 5;
 else
     disp('Check recstruct.label for EMG and trig data indices!')
     return;
@@ -95,26 +95,26 @@ timeAxis = 1000*((0:(1/fs):(1/fs)*(size(emgData,2)-1))-bl/1000);
 %% Accept/reject EMG trials
 
 emgAccepted = ones(1,size(emgData,1));
-% figure
-% for i=1:size(emgData,1)
-%     plot(timeAxis,emgData(i,:))
-%     hold on
-%     plot([timeAxis(1) timeAxis(end)],[-10 -10],'g');
-%     plot([timeAxis(1) timeAxis(end)],[10 10],'g');
-%     plot([0 0],[min(emgData(i,:)) max(emgData(i,:))],'r');
-%     title('Select accepted(mouse) / rejected(keyboard) trials')
-%     xlabel('Time (ms)')
-%     ylabel('Voltage (\mu V)')
-%     %         xlim([max(timeAxis(1),latency_TMS-100) latency_TMS+100]);
-%     button = waitforbuttonpress;
-%     if button==0,
-%         disp(['Trial ' int2str(i) ', Accepted']);
-%     else
-%         emgAccepted(i) = 0;
-%         disp(['Trial ' int2str(i) ', Rejected']);
-%     end
-%     hold off
-% end
+figure
+for i=1:size(emgData,1)
+    plot(timeAxis,emgData(i,:))
+    hold on
+    plot([timeAxis(1) timeAxis(end)],[-10 -10],'g');
+    plot([timeAxis(1) timeAxis(end)],[10 10],'g');
+    plot([0 0],[min(emgData(i,:)) max(emgData(i,:))],'r');
+    title('Select accepted(mouse) / rejected(keyboard) trials')
+    xlabel('Time (ms)')
+    ylabel('Voltage (\mu V)')
+    %         xlim([max(timeAxis(1),latency_TMS-100) latency_TMS+100]);
+    button = waitforbuttonpress;
+    if button==0,
+        disp(['Trial ' int2str(i) ', Accepted']);
+    else
+        emgAccepted(i) = 0;
+        disp(['Trial ' int2str(i) ', Rejected']);
+    end
+    hold off
+end
 
 
 %% Plot MEPs:
